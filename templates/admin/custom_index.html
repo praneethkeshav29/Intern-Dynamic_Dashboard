@@ -1,0 +1,86 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+.wells {
+  padding: 25px;
+  font-size: 18px;
+  margin-top:5px;
+  text-align: center;
+  background-color: #ddd;
+  //color: white;
+  border: solid 1px #eee;
+  border-radius: 6px;
+}
+.well{
+text-align: center;
+//color:#fff;
+//border: solid 1px #aaa;
+//border-radius: 0px;
+cursor: pointer;
+}
+.dispanel{
+padding: 10px;
+display:none;
+}
+.spac{
+margin:10px;
+}
+.asp{
+margin-left: auto;}
+</style>
+
+
+
+{% if current_user.is_authenticated %}
+      {%- for todo in l %}
+          <script>
+          $(document).ready(function(){
+            $("#{{todo}}").click(function(e){
+              $("#{{todo}}panel").slideToggle("fast");
+            });
+          });
+          </script>
+
+         <div id="{{todo}}" class="well">   {{ todo }}
+            <div id="{{todo}}panel" class="dispanel wells">
+                <!--<a href="{{todo}}"><button type="button" class="btn btn-success spac" >View Plotly Dashboard</button></a>-->
+                <a href="dashboard/{{todo}}"><button type="button" class="btn btn-success spac" >View DC.js Dashboard</button></a>
+                <a href="datasource/{{todo}}"><button type="button" class="btn btn-primary spac" id="{{todo}}data">Add Data Sources</button></a>
+
+         </div>
+
+         </div>
+      {%- endfor %}
+
+<!-- Content Header (Page header) -->
+
+<!-- /.content -->
+{% else %}
+
+    <center>
+      <section class="content" style="color: white">
+        <div class="col-sm-12">
+          <h1>Flask-Admin Dashboard</h1>
+          <p class="lead">Authentication</p>
+          {% if not current_user.is_authenticated %}
+                <br>
+                <p>
+                    <a class="btn btn-primary" href="{{ url_for('security.login') }}">Login</a>
+                </p>
+          {% endif %}
+          <br>
+          <p>
+              <a class="btn btn-primary" href="/"><i class="glyphicon glyphicon-chevron-left"></i> Back</a>
+          </p>
+        </div>
+      </section>
+    </center>
+
+    <br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br>
+{% endif %}
+{% endblock body %}

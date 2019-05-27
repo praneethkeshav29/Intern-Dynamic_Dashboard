@@ -1,0 +1,591 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Workspaces - Dashboard</title>
+
+  
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Flask-Admin dashboard login template">
+  <meta name="author" content="Praneeth, Nikshith">
+     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+<link href="/static/css/dc.css" rel="stylesheet">
+      <script src="/static/js/d3.js"></script>
+    <script src="/static/js/crossfilter.js"></script>
+      <script src="/static/js/dc.js"></script>
+
+
+  <!-- Bootstrap 3.3.6 -->
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet"></link>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link href="/static/css/AdminLTE.min.css" rel="stylesheet"></link>
+  <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
+  <link href="/static/css/skins/_all-skins.min.css" rel="stylesheet"></link>
+  <!-- iCheck -->
+  <link href="/static/plugins/iCheck/flat/blue.css" rel="stylesheet"></link>
+  <!-- Morris chart -->
+  <link href="/static/plugins/morris/morris.css" rel="stylesheet"></link>
+  <!-- jvectormap -->
+  <link href="/static/plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet"></link>
+  <!-- Date Picker -->
+  <link href="/static/plugins/datepicker/datepicker3.css" rel="stylesheet"></link>
+  <!-- Daterange picker -->
+  <link href="/static/plugins/daterangepicker/daterangepicker.css" rel="stylesheet"></link>
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link href="/static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet"></link>
+  <!-- Flask-admin admin styles -->
+  <link href="/admin/static/admin/css/bootstrap3/admin.css?v=1.1.1" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+  <div class="wrapper">
+
+    <header class="main-header" >
+      <!-- Logo -->
+
+        <span>
+      <a href="/admin" class="logo" style="background-color:#4e4d50;">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini"  ><b>D</b></span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg" ><b>Dashboard</b></span>
+      </a>
+            </span>
+
+
+      <!-- Header Navbar: style can be found in header.less -->
+      <nav class="navbar navbar-static-top" style="background-color:#040c3e;">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+          <span class="sr-only">Toggle navigation</span>
+        </a>
+
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+            <!-- Notifications: style can be found in dropdown.less -->
+
+
+            <!-- Control Sidebar Toggle Button -->
+
+            <li>
+
+
+<!-- User Account: style can be found in dropdown.less -->
+
+<li class="dropdown user user-menu">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <i class="fa fa-user-circle" style="color: white; font-size: 1.4em;"></i>
+    <span class="hidden-xs">
+
+       Admin
+
+   </span>
+</a>
+<ul class="dropdown-menu">
+  <!-- User image -->
+
+
+<!-- Menu Footer-->
+<li class="user-footer">
+
+<div class="pull-right">
+<a href="/admin/logout/" class="btn btn-default btn-flat">Sign out</a>
+</div>
+</li>
+</ul>
+</li>
+
+
+
+
+
+            </li>
+          </ul>
+
+
+          <ul class="nav navbar-nav navbar-right">
+
+
+
+
+          </ul>
+
+
+        </div>
+      </nav>
+    </header>
+    <aside class="main-sidebar">
+      <!-- sidebar: style can be found in sidebar.less -->
+      <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+          <div class="pull-left image">
+            <i class="fa fa-user-circle" style="color: white; font-size: 2.5em;"></i>
+          </div>
+          <div class="pull-left info">
+            <p>
+             Admin
+
+           </p>
+
+         </div>
+       </div>
+
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" >
+        <li class="header">MAIN NAVIGATION</li>
+
+
+
+        <li class="active">
+          <a href="/admin/">My Workspaces</a>
+        </li>
+          {% if adm[0]=='superuser' %}
+        <li>
+          <a href="/admin/role/">
+
+
+    <i class="fa fa-server"></i>
+
+Workspaces</a>
+        </li>
+        <li>
+          <a href="/admin/user/">
+
+
+    <i class="fa fa-users"></i>
+
+Users</a>
+        </li>
+        {% endif %}
+
+
+
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+  <div class="content-wrapper">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<div class="container" style="background-color:white;">
+    {% if url=='no' %}
+Yikes! You don't have any data sources yet.
+    To add, click here
+
+                <a href="/admin/datasource/{{product}}"><button type="button" class="btn btn-primary spac" id="{{todo}}data">Add Data Sources</button></a>
+    {% else %}
+                   <div class="row" style="margin:auto; padding:auto;">
+                       <span ><a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a></span>
+
+                   </div>
+                <div class="row" style="background-color:white;">
+                     <div class="col-sm-4" >
+                        <div>
+                            <span><b>Studies by Therapy</b></span>
+                         <span id="Therapy"> </span>
+                            </div>
+                    </div>
+
+                    <div class="col-sm-4"  >
+                        <div>
+                            <span><b>Studies by Sponsor</b></span>
+                            <span id="sponsor" ></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" >
+                        <div>
+                            <span><b>Protocol Deviations</b></span>
+                        <span id="PdCount"></span>
+                            </div>
+                    </div>
+                 </div>
+                   <div class="row">
+                     <div class="col-sm-4" >
+                         <div>
+                             <span><b>Completed visits</b></span>
+                         <span id="visits"> </span>
+                             </div>
+                    </div>
+                    <div class="col-sm-4" >
+                        <div>
+                            <span><b>Se Term Count</b></span>
+                            <span id="SeTerm"></span>
+                        </div>
+                    </div>
+
+
+                 </div>
+                   <div class="row">
+                      <div class="col-sm-4" >
+                          <div>
+                              <span><b>Financial Status</b></span>
+                        <span id="Financial" ></span>
+                              </div>
+                    </div>
+                       <div class="col-sm-2" >
+                    </div>
+                       <div class="col-sm-3" >
+                           <div>
+                               <span><b>Enrollment Status</b></span>
+                        <span id="Enrollment"></span>
+                               </div>
+                    </div>
+
+
+                 </div>
+
+
+
+
+
+
+    <div id="status"></div>
+
+
+{% endif %}
+
+</div>
+
+
+
+
+
+<!-- Content Header (Page header) -->
+
+<!-- /.content -->
+
+
+
+
+  </div>
+  <!-- / Content Wrapper. color white -->
+
+  <!-- Control Sidebar -->
+
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+  immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+
+
+
+
+</div>
+
+<script src="/static/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/admin/static/vendor/select2/select2.min.js?v=3.5.2" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="/static/plugins/morris/morris.min.js"></script>
+<script src="/static/plugins/sparkline/jquery.sparkline.min.js"></script>
+<script src="/static/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="/static/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<script src="/static/plugins/knob/jquery.knob.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="/static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<script src="/static/js/app.min.js"></script>
+<script src="/static/js/demo.js"></script>
+
+
+ <script>
+        function getJSON(url) {
+            var resp ;
+            var xmlHttp ;
+            resp  = '' ;
+            xmlHttp = new XMLHttpRequest();
+            if(xmlHttp != null)
+            {
+                xmlHttp.open( "GET", url, false );
+                xmlHttp.send( null );
+                resp = xmlHttp.responseText;
+            }
+            return resp ;
+                               }
+    </script>
+
+
+
+ <script>
+        var temp ;
+        temp = getJSON('{{url}}') ;
+        var gjson=JSON.parse(temp);
+        var project_data=gjson.ProjectData;
+        var domains=[]
+        gjson.ProjectData.forEach(function (key) {
+
+            domains.push((key.StudyName));
+
+        });
+        console.log(domains);
+
+
+    </script>
+
+       <script>
+        var data= crossfilter(project_data);
+        var count=project_data.length;
+        var barwidth= count*75;
+        var piewidth=count*88;
+        var pierad=count*27;
+        var gapws=count*17;
+        var cgapw=count*9;
+        var compwidth=count*145;
+        var compxl=count*116;
+        var XDimension=data.dimension(function(d){ return [d.StudyName]; });
+        var Visits_Grp=XDimension.group().reduceSum(function(d){ return [d.OnTimeCompletedVisit] });
+        var VisitsChart = dc.barChart("#visits")
+                                .xAxisLabel("Study Name")
+                                .yAxisLabel("OnTimeCompletedVisit");
+
+                 VisitsChart.width(barwidth)
+                            .height(275)
+                            .gap(cgapw)
+                            .dimension(XDimension)
+                            .group(Visits_Grp)
+                            .elasticY(true)
+                            .x(d3.scaleBand())
+                            .xUnits(dc.units.ordinal)
+                            .colors(["#f3a81e"])
+                            .renderHorizontalGridLines(true)
+                            .yAxis().ticks(5);
+
+
+
+        var SE_Grp=XDimension.group().reduceSum(function(d){ return [d.SaeTermCount] });
+        var SeChart = dc.barChart("#SeTerm")
+                                .xAxisLabel("Study Name")
+                                .yAxisLabel("SAE Term Count");
+
+                 SeChart
+                 			.width(barwidth)
+                            .height(275)
+                            .gap(cgapw)
+                            .dimension(XDimension)
+                            .group(SE_Grp)
+                            .elasticY(true)
+                            .x(d3.scaleBand())
+                            .xUnits(dc.units.ordinal)
+                            .colors(["#1c344e"])
+                            .renderHorizontalGridLines(true)
+                            .yAxis().ticks(5);
+
+
+        var Pd_Grp=XDimension.group().reduceSum(function(d){ return [d.PdCount] });
+        var PdChart = dc.barChart("#PdCount")
+                                .xAxisLabel("Study Name")
+                                .yAxisLabel("Protocol Deviation Count");
+
+                 PdChart.width(barwidth)
+                            .height(275)
+                            .gap(cgapw)
+                            .dimension(XDimension)
+                            .group(Pd_Grp)
+                            .elasticY(true)
+                            .x(d3.scaleBand())
+                            .xUnits(dc.units.ordinal)
+                            .renderHorizontalGridLines(true)
+                            .colors(["#38a691"])
+                            .yAxis().ticks(5);
+
+
+        var Therapy_Dimension = data.dimension(function(d){ return d.TherapeuticArea; });
+        var Therapy_Group = Therapy_Dimension.group();
+        var TherapyChart =     dc.pieChart('#Therapy')
+                             .width(piewidth)
+
+                             .height(275)
+                             .radius(pierad)
+                             .innerRadius(15)
+                             .dimension(Therapy_Dimension)
+                             .legend(dc.legend())
+                             .ordinalColors(['#EDC948', '#4E79A7', '#F28E2B','#B07AA1','#E15759','#FF9DA7'])
+                             .group(Therapy_Group)
+                             .on('pretransition', function(chart) {
+                                                                    chart.selectAll('text.pie-slice').text(function(d) {
+                                                                    return d.data.key + ' ' + dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100) + '%';
+                                                                    })
+                                                                    }
+                                                                    );
+
+
+
+
+            var sponsor_dimension=data.dimension(function(d){ return d.SponsorName; });
+            var sponsor_grp=sponsor_dimension.group().reduceCount(function(d) { return d.SponsorName });
+            var SponsorChart = dc.barChart("#sponsor")
+                                .xAxisLabel("Sponsor Name")
+                                .yAxisLabel("No. of Studies by Sponsor")
+                            	.width(barwidth)
+                 				.gap(gapws)
+	                            .height(275)
+	                            .dimension(sponsor_dimension)
+	                            .group(sponsor_grp)
+	                            .elasticY(true)
+	                            .x(d3.scaleBand())
+	                            .xUnits(dc.units.ordinal)
+//.barPadding(0.5)
+	                            .colors(["#ffc1cc"])
+	                            .renderHorizontalGridLines(true)
+	                            .yAxis().ticks(5);
+dc.renderAll();
+</script>
+
+
+  <script>
+        var composite = dc.compositeChart("#Financial");
+
+
+var dim = data.dimension(function(d) { return d["StudyName"];});
+
+var grp1 = dim.group().reduceSum(function(d) { return d["ProfessionalCost"]; });
+var grp2 = dim.group().reduceSum(function(d) { return d["PassthroughCost"]; });
+var grp3 = dim.group().reduceSum(function(d) { return d["ActualProfessionalCost"]; });
+var grp4 = dim.group().reduceSum(function(d) { return d["ActualPassThroughCost"]; });
+
+var chart1 = dc.barChart(composite)
+  .dimension(dim)
+  .centerBar(true)
+  .serieGap(8)
+  .valueAccessor(function(d) { return d.value; })
+  .group(grp1, "Professional");//.stack(grp4, "PassThroughCost");
+
+var chart2 = dc.barChart(composite)
+  .dimension(dim)
+  .centerBar(true)
+  .serieGap(8)
+  .valueAccessor(function(d) { return d.value; })
+  .colors(d3.scaleOrdinal().range(['rgb(64, 105, 170)']))
+  .group(grp3, "ActualProfessional");//.stack(grp3, "ProfessionalCost");
+
+//.range(['rgb(159,190,220)','rgb(253,195,129)'])
+
+var chart3 = dc.barChart(composite)
+  .dimension(dim)
+  .centerBar(true)
+  .valueAccessor(function(d) { return d.value; })
+  .serieGap(8)
+  .colors(d3.scaleOrdinal().range(['rgb(186,190,120)']))
+  .x(d3.scaleBand())
+  .group(grp2, "PassThrough")
+
+var chart4 = dc.barChart(composite)
+  .dimension(dim)
+  .centerBar(true)
+  .serieGap(8)
+  .valueAccessor(function(d) { return d.value; })
+  .colors(d3.scaleOrdinal().range(['rgb(6, 1, 68)']))
+  .x(d3.scaleBand())
+  .group(grp4, "ActualPassThrough")
+var leftMargin = composite.margins().left; // 30 by default
+composite.margins().left = 60;
+leftMargin = composite.margins().left; // now 50
+composite
+  .width(compwidth)
+  .height(275)
+  .dimension(dim)
+//.x(d3.scaleBand())
+  .x(d3.scaleBand().domain(domains))
+  .xUnits(dc.units.ordinal)
+  .yAxisLabel(["Costs"],30)
+
+  .elasticY(true)
+  .legend(dc.legend().x(compxl).y(30).itemHeight(13).gap(5))
+  .renderHorizontalGridLines(true)
+  .compose([chart1,chart2,chart3,chart4])
+  //.y(d3.scaleLinear().range([0, 50000]))
+  .brushOn(true);
+
+
+var composite_e = dc.compositeChart("#Enrollment");
+
+
+
+
+var grp5 = dim.group().reduceSum(function(d) { return d["TargetEnrollment"]; });
+var grp6 = dim.group().reduceSum(function(d) { return d["ActualTargetEnrollment"]; });
+
+
+var chart5 = dc.barChart(composite_e)
+  .dimension(dim)
+  .centerBar(true)
+  .serieGap(50)
+  .valueAccessor(function(d) { return d.value; })
+  .colors(d3.scaleOrdinal().range(['rgb(69, 120, 204)']))
+  .group(grp5, "Estimated");//.stack(grp4, "PassThroughCost");
+
+var chart6 = dc.barChart(composite_e)
+  .dimension(dim)
+  .centerBar(true)
+  .serieGap(50)
+  .valueAccessor(function(d) { return d.value; })
+  .colors(d3.scaleOrdinal().range(['rgb(110, 120, 135)']))
+  .group(grp6, "Actuals");//.stack(grp3, "ProfessionalCost");
+
+
+var leftMargin_e = composite_e.margins().left; // 30 by default
+composite_e.margins().left = 60;
+leftMargin_e = composite_e.margins().left; // now 50
+composite_e
+  .width(compwidth)
+  .height(275)
+  .dimension(dim)
+//.x(d3.scaleBand())
+  .x(d3.scaleBand().domain(domains))
+  .xUnits(dc.units.ordinal)
+  .yAxisLabel(["Costs"])
+
+  .elasticY(true)
+  .legend(dc.legend().x(compxl).y(30).itemHeight(13).gap(5))
+  .renderHorizontalGridLines(true)
+  .compose([chart5,chart6])
+  //.y(d3.scaleLinear().range([0, 50000]))
+  .brushOn(true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+dc.renderAll();
+
+
+    </script>
+
+
+
+</body>
+</html>

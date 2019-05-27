@@ -1,0 +1,10 @@
+Flask
+Flask-Admin
+Flask-SQLAlchemy
+Flask-Security>=1.7.5
+enum34==1.1.6
+dash-bootstrap-components
+dash==0.39.0
+dash_core_components
+dash_html_components
+pycrypto
