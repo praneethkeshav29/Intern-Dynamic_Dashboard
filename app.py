@@ -9,10 +9,9 @@ from flask_admin import helpers as admin_helpers
 from flask_admin import expose, AdminIndexView
 import dash_bootstrap_components as dbc
 import dash
-from dashapp1.layout import layout2, layout3, layout4
 from werkzeug.wsgi import DispatcherMiddleware
 from werkzeug.serving import run_simple
-
+from dashapp1.layout import layout2, layout3, layout4
 # Create Flask application
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -117,7 +116,6 @@ class CustomView(AdminIndexView):
             else:
                 dashapp1.layout = layout3
                 dash_app2.layout = layout3
-
         except:
             pass
         return self.render('admin/custom_index.html', l=l)
@@ -216,6 +214,7 @@ def security_context_processor():
     )
 
 
+
 # define protect_views to protect dash apps
 def protect_views(app):
     for view_func in app.server.view_functions:
@@ -262,3 +261,4 @@ if __name__ == '__main__':
     xyz = DispatcherMiddleware(app, {'/admin/dash1': dashapp1.server, '/admin/dash2': dash_app2.server,
                                      '/admin/dash3': dashapp2.server})
     run_simple('localhost', 5000, xyz, use_reloader=True, use_debugger=True)
+

@@ -1,6 +1,13 @@
 # Create dummy secrey key so we can use sessions
 SECRET_KEY = '123456790'
-
+from sqlalchemy import create_engine
+db_uri = 'mysql://root:@localhost/flat'
+engine = create_engine(db_uri, pool_pre_ping=True)
+sqlq = 'CREATE DATABASE IF NOT EXISTS flat;'
+try:
+    result = engine.execute(sqlq)
+except:
+    print("Database error")
 # Create in-memory database
 
 SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/flat'

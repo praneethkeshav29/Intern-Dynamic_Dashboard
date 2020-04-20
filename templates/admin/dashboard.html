@@ -1,14 +1,18 @@
 
 
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
   <title>My Workspaces - Dashboard</title>
 
-  
+
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=0.7">
   <meta name="description" content="Flask-Admin dashboard login template">
   <meta name="author" content="Praneeth, Nikshith">
      <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -17,6 +21,38 @@
       <script src="/static/js/d3.js"></script>
     <script src="/static/js/crossfilter.js"></script>
       <script src="/static/js/dc.js"></script>
+
+    <style>
+        #visits .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-30deg);
+}
+
+
+       #sponsor .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-30deg);
+}
+        #SeTerm .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-30deg);
+}
+        #Financial .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-30deg);
+}
+        #Enrollment .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-30deg);
+}
+
+ #PdCount .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-45deg);
+}
+
+
+    </style>
 
 
   <!-- Bootstrap 3.3.6 -->
@@ -54,7 +90,7 @@
 
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" >
   <div class="wrapper">
 
     <header class="main-header" >
@@ -157,7 +193,7 @@
         <li class="active">
           <a href="/admin/">My Workspaces</a>
         </li>
-          {% if adm[0]=='superuser' %}
+
         <li>
           <a href="/admin/role/">
 
@@ -174,7 +210,7 @@ Workspaces</a>
 
 Users</a>
         </li>
-        {% endif %}
+
 
 
 
@@ -182,76 +218,37 @@ Users</a>
     </section>
     <!-- /.sidebar -->
   </aside>
-  <div class="content-wrapper">
+  <div class="content-wrapper" style="background-color:#fff;">
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<div class="container" style="background-color:white;">
-    {% if url=='no' %}
-Yikes! You don't have any data sources yet.
-    To add, click here
+<div class="container-fluid" style="background-color:white;" id="zo">
 
-                <a href="/admin/datasource/{{product}}"><button type="button" class="btn btn-primary spac" id="{{todo}}data">Add Data Sources</button></a>
-    {% else %}
                    <div class="row" style="margin:auto; padding:auto;">
                        <span ><a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a></span>
-
+ <!-- <div><span><b>Studies by Therapy</b></span></div>  <div><span><b>Studies by Sponsor</b></span></div>
+      <div><span><b>Protocol Deviations</b></span></div>
+      <div><span><b>Financial Status</b></span></div>
+                        <div><span style="margin:0px;"><b>Completed Visits</b></span></div>
+                              <div><span><b>Se Term Count</b></span></div>
+-->
                    </div>
-                <div class="row" style="background-color:white;">
-                     <div class="col-sm-4" >
-                        <div>
-                            <span><b>Studies by Therapy</b></span>
                          <span id="Therapy"> </span>
-                            </div>
-                    </div>
-
-                    <div class="col-sm-4"  >
-                        <div>
-                            <span><b>Studies by Sponsor</b></span>
+   <span id="Enrollment"></span>
+                        <span id="visits"></span>
+    <span id="PdCount"></span>
+     <span id="Financial" ></span>
                             <span id="sponsor" ></span>
-                        </div>
-                    </div>
-                    <div class="col-sm-4" >
-                        <div>
-                            <span><b>Protocol Deviations</b></span>
-                        <span id="PdCount"></span>
-                            </div>
-                    </div>
-                 </div>
-                   <div class="row">
-                     <div class="col-sm-4" >
-                         <div>
-                             <span><b>Completed visits</b></span>
-                         <span id="visits"> </span>
-                             </div>
-                    </div>
-                    <div class="col-sm-4" >
-                        <div>
-                            <span><b>Se Term Count</b></span>
-                            <span id="SeTerm"></span>
-                        </div>
-                    </div>
 
 
-                 </div>
-                   <div class="row">
-                      <div class="col-sm-4" >
-                          <div>
-                              <span><b>Financial Status</b></span>
-                        <span id="Financial" ></span>
-                              </div>
-                    </div>
-                       <div class="col-sm-2" >
-                    </div>
-                       <div class="col-sm-3" >
-                           <div>
-                               <span><b>Enrollment Status</b></span>
-                        <span id="Enrollment"></span>
-                               </div>
-                    </div>
 
 
-                 </div>
+                <span id="SeTerm"></span>
+
+
+
+
+
 
 
 
@@ -261,7 +258,7 @@ Yikes! You don't have any data sources yet.
     <div id="status"></div>
 
 
-{% endif %}
+
 
 </div>
 
@@ -316,275 +313,264 @@ Yikes! You don't have any data sources yet.
 
  <script>
         function getJSON(url) {
-            var resp ;
-            var xmlHttp ;
-            resp  = '' ;
-            xmlHttp = new XMLHttpRequest();
-            if(xmlHttp != null)
-            {
-                xmlHttp.open( "GET", url, false );
-                xmlHttp.send( null );
-                resp = xmlHttp.responseText;
-            }
-            return resp ;
-                               }
-    </script>
-
-
-
- <script>
+                  var resp ;
+                  var xmlHttp ;
+                  resp  = '' ;
+                  xmlHttp = new XMLHttpRequest();
+                  if(xmlHttp != null)
+                  {
+                      xmlHttp.open( "GET", url, false );
+                      xmlHttp.send( null );
+                      resp = xmlHttp.responseText;
+                  }
+                  return resp ;
+        }
+  </script>
+  <script>
         var temp ;
-        temp = getJSON('{{url}}') ;
+        temp = getJSON('http://183.82.108.66:8687/api/admin/studystatuscount?companyId=QUAD OOv7xUb7') ;
         var gjson=JSON.parse(temp);
         var project_data=gjson.ProjectData;
         var domains=[]
         gjson.ProjectData.forEach(function (key) {
-
             domains.push((key.StudyName));
-
         });
-        console.log(domains);
+  </script>
 
-
-    </script>
-
-       <script>
+  <script>
         var data= crossfilter(project_data);
         var count=project_data.length;
-        var barwidth= count*75;
-        var piewidth=count*88;
-        var pierad=count*27;
-        var gapws=count*17;
-        var cgapw=count*9;
-        var compwidth=count*145;
-        var compxl=count*116;
+        var barwidth= count*57;
+        var piewidth=count*58;
+        var pierad=count*18;
+        var gapws=count*2.7;
+        var cgapw=count*6;
+        var heicount = count*55;
+        var compwidth=count*97;
+        var compxl=count*98;
         var XDimension=data.dimension(function(d){ return [d.StudyName]; });
         var Visits_Grp=XDimension.group().reduceSum(function(d){ return [d.OnTimeCompletedVisit] });
         var VisitsChart = dc.barChart("#visits")
-                                .xAxisLabel("Study Name")
-                                .yAxisLabel("OnTimeCompletedVisit");
+                                .xAxisLabel("")
+                                .yAxisLabel(["OnTimeCompletedVisit"],10);
 
-                 VisitsChart.width(barwidth)
-                            .height(275)
-                            .gap(cgapw)
-                            .dimension(XDimension)
-                            .group(Visits_Grp)
-                            .elasticY(true)
-                            .x(d3.scaleBand())
-                            .xUnits(dc.units.ordinal)
-                            .colors(["#f3a81e"])
-                            .renderHorizontalGridLines(true)
-                            .yAxis().ticks(5);
+             VisitsChart.width(barwidth*.881)
+                        .height(heicount)
+                        .gap(cgapw)
+                        .dimension(XDimension)
+                        .group(Visits_Grp)
+                        .elasticY(true)
+                        .margins({top: 30*0.77, right:0.1*barwidth, bottom: 50*0.77, left: 48*0.77})
+                        .x(d3.scaleBand())
+                        .colors(["#1c344e"])
+                        .xUnits(dc.units.ordinal)
+                        .renderHorizontalGridLines(true)
+                        .yAxis().ticks(5);
 
+              var viMargin = VisitsChart.margins().bottom; // 30 by default
+              VisitsChart.margins().bottom = 72*0.77;
+              viMargin = VisitsChart.margins().bottom;
 
 
         var SE_Grp=XDimension.group().reduceSum(function(d){ return [d.SaeTermCount] });
         var SeChart = dc.barChart("#SeTerm")
-                                .xAxisLabel("Study Name")
+                                .xAxisLabel([""],5)
                                 .yAxisLabel("SAE Term Count");
 
-                 SeChart
-                 			.width(barwidth)
-                            .height(275)
+                     SeChart.width(barwidth*0.732)
+                            .height(heicount)
                             .gap(cgapw)
                             .dimension(XDimension)
                             .group(SE_Grp)
                             .elasticY(true)
+                            .margins({top: 10*0.77, right: 30*0.77, bottom: 60*0.77, left: 48*0.77})
                             .x(d3.scaleBand())
                             .xUnits(dc.units.ordinal)
                             .colors(["#1c344e"])
-                            .renderHorizontalGridLines(true)
                             .yAxis().ticks(5);
 
-
+/*var seMargin = SeChart.margins().bottom; // 30 by default
+SeChart.margins().bottom = 60*0.77;
+seMargin = SeChart.margins().bottom;
+*/
         var Pd_Grp=XDimension.group().reduceSum(function(d){ return [d.PdCount] });
         var PdChart = dc.barChart("#PdCount")
-                                .xAxisLabel("Study Name")
-                                .yAxisLabel("Protocol Deviation Count");
+                                .xAxisLabel([""])
+                                .yAxisLabel(["Protocol Deviation"],10);
 
-                 PdChart.width(barwidth)
-                            .height(275)
+                     PdChart.width(barwidth*.95)
+                            .height(heicount)
                             .gap(cgapw)
                             .dimension(XDimension)
                             .group(Pd_Grp)
                             .elasticY(true)
+                            .elasticX(true)
+                            .margins({top: 30*0.77, right: 30*0.77, bottom: 0, left: 58*0.77})
                             .x(d3.scaleBand())
                             .xUnits(dc.units.ordinal)
-                            .renderHorizontalGridLines(true)
                             .colors(["#38a691"])
-                            .yAxis().ticks(5);
+                            ;
+
+                var pdMargin = PdChart.margins().bottom; // 30 by default
+                PdChart.margins().bottom = 80*0.77;
+                pdMargin = PdChart.margins().bottom;
 
 
         var Therapy_Dimension = data.dimension(function(d){ return d.TherapeuticArea; });
         var Therapy_Group = Therapy_Dimension.group();
-        var TherapyChart =     dc.pieChart('#Therapy')
-                             .width(piewidth)
-
-                             .height(275)
-                             .radius(pierad)
-                             .innerRadius(15)
+        var TherapyChart = dc.pieChart('#Therapy')
+                             .width(piewidth*1.2)
+                             .height(heicount)
+                             .radius(pierad*0.87)
+                             .innerRadius(18*0.77)
                              .dimension(Therapy_Dimension)
                              .legend(dc.legend())
                              .ordinalColors(['#EDC948', '#4E79A7', '#F28E2B','#B07AA1','#E15759','#FF9DA7'])
                              .group(Therapy_Group)
                              .on('pretransition', function(chart) {
                                                                     chart.selectAll('text.pie-slice').text(function(d) {
-                                                                    return d.data.key + ' ' + dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100) + '%';
+                                                                    return  ' ' + dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100) + '%';
                                                                     })
                                                                     }
                                                                     );
 
 
-
-
             var sponsor_dimension=data.dimension(function(d){ return d.SponsorName; });
             var sponsor_grp=sponsor_dimension.group().reduceCount(function(d) { return d.SponsorName });
             var SponsorChart = dc.barChart("#sponsor")
-                                .xAxisLabel("Sponsor Name")
-                                .yAxisLabel("No. of Studies by Sponsor")
-                            	.width(barwidth)
-                 				.gap(gapws)
-	                            .height(275)
-	                            .dimension(sponsor_dimension)
-	                            .group(sponsor_grp)
-	                            .elasticY(true)
-	                            .x(d3.scaleBand())
-	                            .xUnits(dc.units.ordinal)
-//.barPadding(0.5)
-	                            .colors(["#ffc1cc"])
-	                            .renderHorizontalGridLines(true)
-	                            .yAxis().ticks(5);
-dc.renderAll();
-</script>
+                                .xAxisLabel([""],50)
+                                .yAxisLabel(["No. of Studies by Sponsor"],10)
+                            	  .width(barwidth*.88)
+                       				  .gap(cgapw*0.77)
+                       				  .margins({top: 10*0.77, right: 0.2*barwidth, bottom: 60*0.77, left: 58*0.77})
+                                .height(heicount)
+	                              .dimension(sponsor_dimension)
+	                              .group(sponsor_grp)
+	                              .elasticY(true)
+	                              .x(d3.scaleBand())
+	                              .xUnits(dc.units.ordinal)
+                                //.barPadding(0.5)
+	                              .colors(["#ffc1cc"])
+	                              .renderHorizontalGridLines(true)
+	                              .yAxis().ticks(5);
 
-
+      dc.renderAll();
+  </script>
   <script>
         var composite = dc.compositeChart("#Financial");
+        var dim = data.dimension(function(d) { return d["StudyName"];});
+        var grp1 = dim.group().reduceSum(function(d) { return d["ProfessionalCost"]; });
+        var grp2 = dim.group().reduceSum(function(d) { return d["PassthroughCost"]; });
+        var grp3 = dim.group().reduceSum(function(d) { return d["ActualProfessionalCost"]; });
+        var grp4 = dim.group().reduceSum(function(d) { return d["ActualPassThroughCost"]; });
+
+        var chart1 = dc.barChart(composite)
+                       .dimension(dim)
+                       .centerBar(true)
+                       .serieGap(10*0.77)
+                       .valueAccessor(function(d) { return d.value; })
+                       .group(grp1, "Professional");//.stack(grp4, "PassThroughCost");
+
+        var chart2 = dc.barChart(composite)
+                       .dimension(dim)
+                       .centerBar(true)
+                       .serieGap(10*0.77)
+                       .valueAccessor(function(d) { return d.value; })
+                       .colors(d3.scaleOrdinal().range(['rgb(107, 174, 214)']))
+                       .group(grp3, "ActualProfessional");//.stack(grp3, "ProfessionalCost");//.range(['rgb(159,190,220)','rgb(253,195,129)'])
+
+        var chart3 = dc.barChart(composite)
+                       .dimension(dim)
+                       .centerBar(true)
+                       .valueAccessor(function(d) { return d.value; })
+                       .serieGap(10*0.77)
+                       .colors(d3.scaleOrdinal().range(['rgb(158, 202, 225)']))
+                       .x(d3.scaleBand())
+                       .group(grp2, "PassThrough")
+
+        var chart4 = dc.barChart(composite)
+                       .dimension(dim)
+                       .centerBar(true)
+                       .serieGap(10*0.77)
+                       .valueAccessor(function(d) { return d.value; })
+                       .colors(d3.scaleOrdinal().range(['rgb(198, 219, 239)']))
+                       .x(d3.scaleBand())
+                       .group(grp4, "ActualPassThrough")
+
+        var leftMargin = composite.margins().left; // 30 by default
+        composite.margins().left = 68*0.77;
+        leftMargin = composite.margins().left; // now 50
+
+        var boMargin = composite.margins().bottom; // 30 by default
+        composite.margins().bottom = 60*0.77;
+        boMargin = composite.margins().bottom;
+
+        var rigMargin = composite.margins().right; // 30 by default
+        composite.margins().right = 0.5*barwidth;
+        rigMargin = composite.margins().right;
+
+        composite.width(compwidth*1.22)
+                 .height(heicount)
+                 .dimension(dim)
+                 //.x(d3.scaleBand())
+                 .x(d3.scaleBand().domain(domains))
+                 .xAxisLabel([""],6)
+                 .xUnits(dc.units.ordinal)
+                 .yAxisLabel(["Costs"],25)
+                 .elasticY(true)
+                 .legend(dc.legend().x(1.47*barwidth).y(30*0.77).itemWidth(5).gap(5))
+                 .renderHorizontalGridLines(true)
+                 .compose([chart1,chart2,chart3,chart4])
+                 .brushOn(true);
 
 
-var dim = data.dimension(function(d) { return d["StudyName"];});
+        var composite_e = dc.compositeChart("#Enrollment");
+        var grp5 = dim.group().reduceSum(function(d) { return d["TargetEnrollment"]; });
+        var grp6 = dim.group().reduceSum(function(d) { return d["ActualTargetEnrollment"]; });
 
-var grp1 = dim.group().reduceSum(function(d) { return d["ProfessionalCost"]; });
-var grp2 = dim.group().reduceSum(function(d) { return d["PassthroughCost"]; });
-var grp3 = dim.group().reduceSum(function(d) { return d["ActualProfessionalCost"]; });
-var grp4 = dim.group().reduceSum(function(d) { return d["ActualPassThroughCost"]; });
+        var chart5 = dc.barChart(composite_e)
+                       .dimension(dim)
+                       .centerBar(true)
+                       .serieGap(30*0.77)
+                       .valueAccessor(function(d) { return d.value; })
+                       .colors(d3.scaleOrdinal().range(['']))
+                       .group(grp5, "Estimated");//.stack(grp4, "PassThroughCost");
 
-var chart1 = dc.barChart(composite)
-  .dimension(dim)
-  .centerBar(true)
-  .serieGap(8)
-  .valueAccessor(function(d) { return d.value; })
-  .group(grp1, "Professional");//.stack(grp4, "PassThroughCost");
-
-var chart2 = dc.barChart(composite)
-  .dimension(dim)
-  .centerBar(true)
-  .serieGap(8)
-  .valueAccessor(function(d) { return d.value; })
-  .colors(d3.scaleOrdinal().range(['rgb(64, 105, 170)']))
-  .group(grp3, "ActualProfessional");//.stack(grp3, "ProfessionalCost");
-
-//.range(['rgb(159,190,220)','rgb(253,195,129)'])
-
-var chart3 = dc.barChart(composite)
-  .dimension(dim)
-  .centerBar(true)
-  .valueAccessor(function(d) { return d.value; })
-  .serieGap(8)
-  .colors(d3.scaleOrdinal().range(['rgb(186,190,120)']))
-  .x(d3.scaleBand())
-  .group(grp2, "PassThrough")
-
-var chart4 = dc.barChart(composite)
-  .dimension(dim)
-  .centerBar(true)
-  .serieGap(8)
-  .valueAccessor(function(d) { return d.value; })
-  .colors(d3.scaleOrdinal().range(['rgb(6, 1, 68)']))
-  .x(d3.scaleBand())
-  .group(grp4, "ActualPassThrough")
-var leftMargin = composite.margins().left; // 30 by default
-composite.margins().left = 60;
-leftMargin = composite.margins().left; // now 50
-composite
-  .width(compwidth)
-  .height(275)
-  .dimension(dim)
-//.x(d3.scaleBand())
-  .x(d3.scaleBand().domain(domains))
-  .xUnits(dc.units.ordinal)
-  .yAxisLabel(["Costs"],30)
-
-  .elasticY(true)
-  .legend(dc.legend().x(compxl).y(30).itemHeight(13).gap(5))
-  .renderHorizontalGridLines(true)
-  .compose([chart1,chart2,chart3,chart4])
-  //.y(d3.scaleLinear().range([0, 50000]))
-  .brushOn(true);
+        var chart6 = dc.barChart(composite_e)
+                      .dimension(dim)
+                      .centerBar(true)
+                      .serieGap(30*0.77)
+                      .valueAccessor(function(d) { return d.value; })
+                      .colors(d3.scaleOrdinal().range(['rgb(107, 174, 214)']))
+                      .group(grp6, "Actuals");//.stack(grp3, "ProfessionalCost");
 
 
-var composite_e = dc.compositeChart("#Enrollment");
-
-
-
-
-var grp5 = dim.group().reduceSum(function(d) { return d["TargetEnrollment"]; });
-var grp6 = dim.group().reduceSum(function(d) { return d["ActualTargetEnrollment"]; });
-
-
-var chart5 = dc.barChart(composite_e)
-  .dimension(dim)
-  .centerBar(true)
-  .serieGap(50)
-  .valueAccessor(function(d) { return d.value; })
-  .colors(d3.scaleOrdinal().range(['rgb(69, 120, 204)']))
-  .group(grp5, "Estimated");//.stack(grp4, "PassThroughCost");
-
-var chart6 = dc.barChart(composite_e)
-  .dimension(dim)
-  .centerBar(true)
-  .serieGap(50)
-  .valueAccessor(function(d) { return d.value; })
-  .colors(d3.scaleOrdinal().range(['rgb(110, 120, 135)']))
-  .group(grp6, "Actuals");//.stack(grp3, "ProfessionalCost");
-
-
-var leftMargin_e = composite_e.margins().left; // 30 by default
-composite_e.margins().left = 60;
+/*var leftMargin_e = composite_e.margins().left; // 30 by default
+composite_e.margins().left = 60*0.77;
 leftMargin_e = composite_e.margins().left; // now 50
-composite_e
-  .width(compwidth)
-  .height(275)
-  .dimension(dim)
-//.x(d3.scaleBand())
-  .x(d3.scaleBand().domain(domains))
-  .xUnits(dc.units.ordinal)
-  .yAxisLabel(["Costs"])
-
-  .elasticY(true)
-  .legend(dc.legend().x(compxl).y(30).itemHeight(13).gap(5))
-  .renderHorizontalGridLines(true)
-  .compose([chart5,chart6])
-  //.y(d3.scaleLinear().range([0, 50000]))
-  .brushOn(true);
+var bottomMargin_e = composite_e.margins().bottom; // 30 by default
+composite_e.margins().bottom = 55*0.77;
+bottomMargin_e = composite_e.margins().bottom;*/
 
 
+         composite_e.width(compwidth*1.1)
+                    .height(heicount)
+                    .dimension(dim)
+                    .x(d3.scaleBand().domain(domains))
+                    .xUnits(dc.units.ordinal)
+                    .xAxisLabel([""],6)
+                    .yAxisLabel(["Costs"],9)
+                    .margins({top: 30*0.77, right:.2*barwidth, bottom: 60*0.77, left: 58*0.77})
+                    .yAxisPadding(10*0.77)
+                    .elasticY(true)
+                    .legend(dc.legend().x(1.5*barwidth).y(30*0.77).itemWidth(5).gap(5))
+                    .renderHorizontalGridLines(true)
+                    .compose([chart5,chart6])
+                    //.y(d3.scaleLinear().range([0, 50000]))
+                    .brushOn(true);
 
-
-
-
-
-
-
-
-
-
-
-dc.renderAll();
-
-
+      dc.renderAll();
     </script>
-
 
 
 </body>
